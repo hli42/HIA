@@ -11,7 +11,6 @@ import org.apache.hadoop.mapred.RecordReader;
 import org.apache.hadoop.mapred.Reporter;
 
 public class TimeUrlTextInputFormat extends FileInputFormat<Text, URLWritable> {
-	
 	@Override
 	public RecordReader<Text, URLWritable> getRecordReader(InputSplit input, JobConf job, Reporter reporter) throws IOException {
 		return new TimeUrlLineRecordReader(job, (FileSplit) input);
