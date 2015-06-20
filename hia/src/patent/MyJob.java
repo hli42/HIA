@@ -29,6 +29,20 @@ public class MyJob extends Configured implements Tool {
 		}
 	}
 
+	public static class ReduceClass extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
+		@Override
+		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+			String csv = "";
+			while (values.hasNext()) {
+				if (csv.length() > 0) {
+					csv += ",";
+				}
+				csv += values.next().toString();
+			}
+			output.collect(key, new Text(csv));
+		}
+	}
+
 	@Override
 	public int run(String[] args) throws Exception {
 		Configuration conf = getConf();
@@ -46,20 +60,6 @@ public class MyJob extends Configured implements Tool {
 		job.setOutputValueClass(Text.class);
 		JobClient.runJob(job);
 		return 0;
-	}
-
-	public static class ReduceClass extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
-		@Override
-		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
-			String csv = "";
-			while (values.hasNext()) {
-				if (csv.length() > 0) {
-					csv += ",";
-				}
-				csv += values.next().toString();
-			}
-			output.collect(key, new Text(csv));
-		}
 	}
 
 	public static void main(String[] args) throws Exception {
